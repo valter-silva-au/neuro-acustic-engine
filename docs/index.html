@@ -500,12 +500,196 @@
         .sidebar::-webkit-scrollbar-track { background: transparent; }
         .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
         /* Responsive */
+        /* Hamburger button */
+        .hamburger {
+            display: none;
+            width: 36px; height: 36px;
+            background: var(--bg-surface-3);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.15s;
+        }
+        .hamburger:hover { background: var(--bg-hover); color: var(--text-primary); }
+        .hamburger svg { width: 18px; height: 18px; }
+        /* Sidebar overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 199;
+            backdrop-filter: blur(4px);
+        }
+        .sidebar-overlay.open { display: block; }
+        /* Settings panel */
+        .settings-panel {
+            display: none;
+            position: fixed;
+            top: 0; right: 0;
+            width: 320px;
+            max-width: 90vw;
+            height: 100vh;
+            background: var(--bg-surface);
+            border-left: 1px solid var(--border);
+            z-index: 300;
+            overflow-y: auto;
+            padding: 1.5rem;
+            transform: translateX(100%);
+            transition: transform 0.25s ease;
+        }
+        .settings-panel.open {
+            display: block;
+            transform: translateX(0);
+        }
+        .settings-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 299;
+            backdrop-filter: blur(4px);
+        }
+        .settings-overlay.open { display: block; }
+        .settings-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .settings-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            transition: color 0.15s;
+        }
+        .settings-close:hover { color: var(--text-primary); }
+        .settings-close svg { width: 20px; height: 20px; }
+        .settings-group {
+            margin-bottom: 1.25rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .settings-group:last-child { border-bottom: none; }
+        .settings-group-title {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+        .settings-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.6rem;
+        }
+        .settings-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .settings-value {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .settings-select {
+            background: var(--bg-surface-3);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.3rem 0.5rem;
+            border-radius: var(--radius);
+            font-size: 0.8rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+        }
+        .settings-toggle {
+            position: relative;
+            width: 40px; height: 22px;
+            background: var(--bg-surface-3);
+            border-radius: 11px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .settings-toggle.on { background: var(--green); border-color: var(--green); }
+        .settings-toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px; left: 2px;
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            background: var(--text-primary);
+            transition: transform 0.2s;
+        }
+        .settings-toggle.on::after { transform: translateX(18px); background: #fff; }
+        .settings-slider {
+            width: 100px;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--bg-surface-3);
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+        }
+        .settings-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px; height: 14px; border-radius: 50%;
+            background: var(--accent); cursor: pointer;
+        }
+        .settings-slider::-moz-range-thumb {
+            width: 14px; height: 14px; border-radius: 50%;
+            background: var(--accent); cursor: pointer; border: none;
+        }
+        .settings-reset {
+            width: 100%;
+            padding: 0.5rem;
+            background: var(--bg-surface-3);
+            border: 1px solid var(--border);
+            color: var(--red);
+            border-radius: var(--radius);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .settings-reset:hover { background: rgba(229,85,101,0.1); border-color: var(--red); }
+        /* Responsive */
         @media (max-width: 768px) {
-            .sidebar { display: none; }
+            .hamburger { display: flex; }
+            .sidebar {
+                position: fixed;
+                top: 0; left: 0;
+                height: 100vh;
+                z-index: 200;
+                transform: translateX(-100%);
+                transition: transform 0.25s ease;
+            }
+            .sidebar.open { transform: translateX(0); }
             .mixer-bar { left: 0; }
             .content { padding: 1.25rem; padding-bottom: calc(var(--mixer-height) + 1.5rem); }
             .page-header { padding: 0 1.25rem; }
             .tracks-grid { grid-template-columns: 1fr; }
+            .mixer-master label { display: none; }
+            .settings-panel { width: 100vw; max-width: 100vw; }
+        }
+        @media (max-width: 480px) {
+            .tracks-grid { gap: 0.5rem; }
+            .track-card { padding: 0.75rem; }
+            .mixer-bar { padding: 0 0.75rem; }
+            .track-research { display: none; }
         }
         /* Animations */
         @keyframes pulse-green {
@@ -554,9 +738,16 @@
     <!-- Main Content -->
     <div class="main">
         <header class="page-header">
+            <button class="hamburger" onclick="toggleSidebar()" title="Menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+            </button>
             <div class="page-title" id="page-title">All Sounds</div>
             <span class="page-badge" id="page-badge">27 samples</span>
             <div class="header-spacer"></div>
+            <button class="header-btn" onclick="openSettings()" title="Settings">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                Settings
+            </button>
             <button class="header-btn" onclick="toggleTheme()" id="theme-toggle" title="Toggle light/dark theme">
                 <svg id="theme-icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
                 <svg id="theme-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -581,6 +772,74 @@
             <label>Master</label>
             <input type="range" min="0" max="100" value="80" class="master-vol" id="master-volume" oninput="setMasterVolume(this.value)">
             <button class="stop-all-btn" onclick="stopAll()">Stop All</button>
+        </div>
+    </div>
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+    <!-- Settings overlay -->
+    <div class="settings-overlay" id="settings-overlay" onclick="closeSettings()"></div>
+
+    <!-- Settings panel -->
+    <div class="settings-panel" id="settings-panel">
+        <div class="settings-title">
+            Settings
+            <button class="settings-close" onclick="closeSettings()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <div class="settings-group">
+            <div class="settings-group-title">Audio</div>
+            <div class="settings-row">
+                <span class="settings-label">Default volume</span>
+                <input type="range" class="settings-slider" id="pref-default-vol" min="0" max="100" value="70" oninput="updatePref('defaultVolume', this.value)">
+                <span class="settings-value" id="pref-default-vol-label">70%</span>
+            </div>
+            <div class="settings-row">
+                <span class="settings-label">Auto-loop new tracks</span>
+                <div class="settings-toggle on" id="pref-auto-loop" onclick="togglePref('autoLoop')"></div>
+            </div>
+        </div>
+
+        <div class="settings-group">
+            <div class="settings-group-title">Display</div>
+            <div class="settings-row">
+                <span class="settings-label">Show research citations</span>
+                <div class="settings-toggle on" id="pref-show-research" onclick="togglePref('showResearch')"></div>
+            </div>
+            <div class="settings-row">
+                <span class="settings-label">Show purpose text</span>
+                <div class="settings-toggle on" id="pref-show-purpose" onclick="togglePref('showPurpose')"></div>
+            </div>
+            <div class="settings-row">
+                <span class="settings-label">Compact cards</span>
+                <div class="settings-toggle" id="pref-compact" onclick="togglePref('compact')"></div>
+            </div>
+        </div>
+
+        <div class="settings-group">
+            <div class="settings-group-title">Appearance</div>
+            <div class="settings-row">
+                <span class="settings-label">Theme</span>
+                <select class="settings-select" id="pref-theme" onchange="updatePref('theme', this.value)">
+                    <option value="system">System</option>
+                    <option value="dark">Dark</option>
+                    <option value="light">Light</option>
+                </select>
+            </div>
+            <div class="settings-row">
+                <span class="settings-label">Waveform style</span>
+                <select class="settings-select" id="pref-waveform" onchange="updatePref('waveformStyle', this.value)">
+                    <option value="bars">Bars</option>
+                    <option value="line">Line</option>
+                    <option value="mirror">Mirror</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="settings-group">
+            <button class="settings-reset" onclick="resetPrefs()">Reset All Preferences</button>
         </div>
     </div>
 </div>
@@ -962,10 +1221,148 @@ function toggleTheme() {
     applyTheme(next);
 }
 
+// ─── SIDEBAR TOGGLE (mobile) ──────────────────────────────────────────
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebar-overlay').classList.toggle('open');
+}
+function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('open');
+}
+
+// ─── SETTINGS PANEL ──────────────────────────────────────────────────
+function openSettings() {
+    document.getElementById('settings-panel').classList.add('open');
+    document.getElementById('settings-overlay').classList.add('open');
+    syncSettingsUI();
+}
+function closeSettings() {
+    document.getElementById('settings-panel').classList.remove('open');
+    document.getElementById('settings-overlay').classList.remove('open');
+}
+
+// ─── USER PREFERENCES ───────────────────────────────────────────────
+const DEFAULT_PREFS = {
+    defaultVolume: 70,
+    autoLoop: true,
+    showResearch: true,
+    showPurpose: true,
+    compact: false,
+    theme: 'system',
+    waveformStyle: 'bars',
+};
+
+function loadPrefs() {
+    try {
+        const stored = localStorage.getItem('na-prefs');
+        return stored ? { ...DEFAULT_PREFS, ...JSON.parse(stored) } : { ...DEFAULT_PREFS };
+    } catch { return { ...DEFAULT_PREFS }; }
+}
+
+function savePrefs(prefs) {
+    localStorage.setItem('na-prefs', JSON.stringify(prefs));
+    applyPrefs(prefs);
+}
+
+function updatePref(key, value) {
+    const prefs = loadPrefs();
+    if (key === 'defaultVolume') value = parseInt(value);
+    prefs[key] = value;
+    savePrefs(prefs);
+    syncSettingsUI();
+}
+
+function togglePref(key) {
+    const prefs = loadPrefs();
+    prefs[key] = !prefs[key];
+    savePrefs(prefs);
+    syncSettingsUI();
+}
+
+function resetPrefs() {
+    localStorage.removeItem('na-prefs');
+    localStorage.removeItem('na-theme');
+    savePrefs({ ...DEFAULT_PREFS });
+    syncSettingsUI();
+}
+
+function syncSettingsUI() {
+    const prefs = loadPrefs();
+    // Volume slider
+    const volSlider = document.getElementById('pref-default-vol');
+    const volLabel = document.getElementById('pref-default-vol-label');
+    if (volSlider) volSlider.value = prefs.defaultVolume;
+    if (volLabel) volLabel.textContent = prefs.defaultVolume + '%';
+    // Toggles
+    ['autoLoop', 'showResearch', 'showPurpose', 'compact'].forEach(key => {
+        const el = document.getElementById('pref-' + key.replace(/([A-Z])/g, '-$1').toLowerCase());
+        if (el) el.classList.toggle('on', prefs[key]);
+    });
+    // Selects
+    const themeSelect = document.getElementById('pref-theme');
+    if (themeSelect) themeSelect.value = prefs.theme;
+    const waveSelect = document.getElementById('pref-waveform');
+    if (waveSelect) waveSelect.value = prefs.waveformStyle;
+}
+
+function applyPrefs(prefs) {
+    // Theme
+    if (prefs.theme === 'system') {
+        const sys = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        applyTheme(sys);
+    } else {
+        applyTheme(prefs.theme);
+    }
+    // Show/hide research citations
+    document.querySelectorAll('.track-research').forEach(el => {
+        el.style.display = prefs.showResearch ? '' : 'none';
+    });
+    // Show/hide purpose
+    document.querySelectorAll('.track-purpose').forEach(el => {
+        el.style.display = prefs.showPurpose ? '' : 'none';
+    });
+    // Compact mode
+    document.querySelectorAll('.track-card').forEach(el => {
+        el.style.padding = prefs.compact ? '0.6rem' : '';
+    });
+    document.querySelectorAll('.track-desc').forEach(el => {
+        el.style.display = prefs.compact ? 'none' : '';
+    });
+}
+
+// Override showCategory to close sidebar on mobile
+const _origShowCategory = showCategory;
+showCategory = function(catId) {
+    _origShowCategory(catId);
+    closeSidebar();
+    // Re-apply prefs after re-render
+    applyPrefs(loadPrefs());
+};
+
+// Override playTrack to use default volume from prefs
+const _origPlayTrack = playTrack;
+playTrack = function(id) {
+    _origPlayTrack(id);
+    if (activeTracks[id]) {
+        const prefs = loadPrefs();
+        activeTracks[id].gainNode.gain.value = prefs.defaultVolume / 100;
+        activeTracks[id].loop = prefs.autoLoop;
+        activeTracks[id].audio.loop = prefs.autoLoop;
+    }
+};
+
 // ─── INIT ─────────────────────────────────────────────────────────────
-applyTheme(getPreferredTheme());
+const initPrefs = loadPrefs();
+if (initPrefs.theme === 'system') {
+    const sys = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    applyTheme(sys);
+} else {
+    applyTheme(initPrefs.theme);
+}
 renderSidebar();
 renderContent();
+applyPrefs(initPrefs);
 </script>
 </body>
 </html>
