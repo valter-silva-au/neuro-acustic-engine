@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+dist/
+build/
+.venv/
+.pytest_cache/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project - large generated audio (keep in LFS)
+# output/focus/ and output/relaxation/ are 8-hour files (~2.4 GB each)
+# Too large even for LFS free tier — exclude from repo
+output/
+
+# ADB events
+.adb_events.jsonl
+
+# Channels
+channels/
+
+# Playwright test artifacts
+node_modules/
+package.json
+package-lock.json
+test-results/
+sessions/
+*.spec.js
+*.mjs
+test-*.js
+test-*.py
+test-*.html
+page-source.html
+run-playwright-test.js
+linkedin-post.md

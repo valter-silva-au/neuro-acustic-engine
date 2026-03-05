@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroAcoustic Engine — Psychoacoustic Audio Library</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #06060b;
+            --bg-surface: #0d0d14;
+            --bg-surface-2: #13131e;
+            --bg-surface-3: #1a1a2a;
+            --bg-hover: #1e1e30;
+            --border: #252538;
+            --border-light: #2f2f48;
+            --text-primary: #eeeef2;
+            --text-secondary: #9898b0;
+            --text-muted: #5e5e78;
+            --accent: #7c6cf0;
+            --accent-dim: rgba(124,108,240,0.12);
+            --accent-glow: rgba(124,108,240,0.25);
+            --green: #1ed760;
+            --green-dim: rgba(30,215,96,0.12);
+            --green-glow: rgba(30,215,96,0.3);
+            --red: #e55565;
+            --orange: #f0a050;
+            --cyan: #50c8f0;
+            --mixer-height: 84px;
+            --sidebar-width: 240px;
+            --radius: 8px;
+            --radius-lg: 12px;
+        }
+        [data-theme="light"] {
+            --bg-primary: #f5f5f8;
+            --bg-surface: #ffffff;
+            --bg-surface-2: #f0f0f5;
+            --bg-surface-3: #e0e0ec;
+            --bg-hover: #e0e0ec;
+            --border: #c0c0d2;
+            --border-light: #a8a8c0;
+            --text-primary: #1a1a2e;
+            --text-secondary: #3d3d58;
+            --text-muted: #606080;
+            --accent: #6c5ce7;
+            --accent-dim: rgba(108,92,231,0.10);
+            --accent-glow: rgba(108,92,231,0.20);
+            --green: #16a34a;
+            --green-dim: rgba(22,163,74,0.10);
+            --green-glow: rgba(22,163,74,0.25);
+            --red: #dc2626;
+            --orange: #d97706;
+            --cyan: #0891b2;
+        }
+        [data-theme="light"] .ctrl-btn.play-btn { color: #fff; }
+        [data-theme="light"] .ctrl-btn.play-btn.playing { background: var(--text-primary); color: #fff; }
+        [data-theme="light"] .disclaimer { background: rgba(220,38,38,0.05); border-color: rgba(220,38,38,0.15); }
+        [data-theme="light"] .mixer-bar { background: rgba(255,255,255,0.92); }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            overflow: hidden;
+            height: 100vh;
+        }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        /* Layout */
+        .app { display: flex; height: 100vh; }
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem 2.5rem 2rem;
+            padding-bottom: calc(var(--mixer-height) + 2rem);
+            scroll-behavior: smooth;
+        }
+        .mixer-bar {
+            position: fixed;
+            bottom: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            height: var(--mixer-height);
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            gap: 0.5rem;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+        }
+        /* Sidebar */
+        .sidebar-logo {
+            padding: 1.5rem 1.25rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .sidebar-logo svg { flex-shrink: 0; }
+        .sidebar-logo h1 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+        .sidebar-logo h1 span { color: var(--accent); }
+        .sidebar-section {
+            padding: 0.75rem 0.75rem 0.25rem;
+        }
+        .sidebar-section-title {
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            padding: 0 0.5rem 0.5rem;
+        }
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.55rem 0.75rem;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            user-select: none;
+        }
+        .sidebar-link:hover { background: var(--bg-hover); color: var(--text-primary); }
+        .sidebar-link.active { background: var(--accent-dim); color: var(--accent); }
+        .sidebar-link svg { width: 18px; height: 18px; flex-shrink: 0; opacity: 0.7; }
+        .sidebar-link.active svg { opacity: 1; }
+        .sidebar-count {
+            margin-left: auto;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 1rem 1.25rem;
+            border-top: 1px solid var(--border);
+        }
+        .sidebar-footer p {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        .sidebar-footer a { color: var(--accent); text-decoration: none; }
+        .sidebar-footer a:hover { text-decoration: underline; }
+        /* Header */
+        .page-header {
+            padding: 0 2.5rem;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+            gap: 1rem;
+        }
+        .page-title {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .page-badge {
+            font-size: 0.68rem;
+            padding: 0.2rem 0.55rem;
+            border-radius: 20px;
+            font-weight: 600;
+            background: var(--accent-dim);
+            color: var(--accent);
+        }
+        .header-spacer { flex: 1; }
+        .header-btn {
+            background: var(--bg-surface-3);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.4rem 0.85rem;
+            border-radius: var(--radius);
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .header-btn:hover { background: var(--bg-hover); color: var(--text-primary); border-color: var(--border-light); }
+        .header-btn svg { width: 14px; height: 14px; }
+        /* Category Sections */
+        .category-section { margin-bottom: 2.5rem; }
+        .category-header { margin-bottom: 1rem; }
+        .category-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .category-desc {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            max-width: 600px;
+        }
+        /* Track Cards */
+        .tracks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 0.75rem;
+        }
+        .track-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            transition: all 0.2s;
+            cursor: default;
+        }
+        .track-card:hover { border-color: var(--border-light); background: var(--bg-surface-2); }
+        .track-card.playing { border-color: var(--green); box-shadow: 0 0 0 1px var(--green-dim); }
+        .track-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 0.4rem;
+        }
+        .track-name {
+            font-size: 0.92rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        .track-badge {
+            font-size: 0.62rem;
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .badge-headphones { background: var(--accent-dim); color: var(--accent); }
+        .badge-speakers { background: var(--green-dim); color: var(--green); }
+        .track-desc {
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+        .track-purpose {
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.6rem;
+        }
+        .track-purpose strong { color: var(--text-primary); font-weight: 500; }
+        .track-research {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-style: italic;
+            padding: 0.4rem 0.6rem;
+            background: var(--accent-dim);
+            border-left: 2px solid var(--accent);
+            border-radius: 0 4px 4px 0;
+            margin-bottom: 0.75rem;
+            line-height: 1.45;
+        }
+        /* Track Controls */
+        .track-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .ctrl-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg-surface-3);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+        .ctrl-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+        .ctrl-btn.play-btn { width: 36px; height: 36px; background: var(--green); color: #000; }
+        .ctrl-btn.play-btn:hover { background: #22e66a; transform: scale(1.05); }
+        .ctrl-btn.play-btn.playing { background: var(--text-primary); }
+        .ctrl-btn.active { color: var(--green); }
+        .ctrl-btn svg { width: 14px; height: 14px; }
+        .ctrl-btn.play-btn svg { width: 16px; height: 16px; }
+        .track-volume {
+            flex: 1;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--bg-surface-3);
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+            margin: 0 0.25rem;
+        }
+        .track-volume::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--text-primary);
+            cursor: pointer;
+            border: none;
+        }
+        .track-volume::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--text-primary);
+            cursor: pointer;
+            border: none;
+        }
+        .volume-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            width: 28px;
+            text-align: right;
+        }
+        /* Waveform */
+        .track-waveform {
+            height: 32px;
+            margin-bottom: 0.6rem;
+            border-radius: 4px;
+            overflow: hidden;
+            background: var(--bg-surface-3);
+        }
+        .track-waveform canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        /* Mixer Bar */
+        .mixer-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-right: 0.5rem;
+            flex-shrink: 0;
+        }
+        .mixer-tracks {
+            display: flex;
+            gap: 0.5rem;
+            flex: 1;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .mixer-tracks::-webkit-scrollbar { display: none; }
+        .mixer-track {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.4rem 0.65rem;
+            min-width: 180px;
+            flex-shrink: 0;
+        }
+        .mixer-track-name {
+            font-size: 0.75rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
+        }
+        .mixer-vol {
+            width: 60px;
+            height: 3px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--bg-surface-3);
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+        }
+        .mixer-vol::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--green);
+            cursor: pointer;
+        }
+        .mixer-vol::-moz-range-thumb {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: var(--green); cursor: pointer; border: none;
+        }
+        .mixer-remove {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 2px;
+            display: flex;
+            transition: color 0.15s;
+        }
+        .mixer-remove:hover { color: var(--red); }
+        .mixer-remove svg { width: 14px; height: 14px; }
+        .mixer-empty {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+        .mixer-master {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: auto;
+            flex-shrink: 0;
+            padding-left: 1rem;
+            border-left: 1px solid var(--border);
+        }
+        .mixer-master label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .master-vol {
+            width: 80px;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--bg-surface-3);
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+        }
+        .master-vol::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px; height: 14px; border-radius: 50%;
+            background: var(--text-primary); cursor: pointer;
+        }
+        .master-vol::-moz-range-thumb {
+            width: 14px; height: 14px; border-radius: 50%;
+            background: var(--text-primary); cursor: pointer; border: none;
+        }
+        .stop-all-btn {
+            background: var(--bg-surface-3);
+            border: 1px solid var(--border);
+            color: var(--red);
+            padding: 0.35rem 0.7rem;
+            border-radius: var(--radius);
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .stop-all-btn:hover { background: rgba(229,85,101,0.1); border-color: var(--red); }
+        /* Disclaimer */
+        .disclaimer {
+            margin-bottom: 2rem;
+            padding: 0.75rem 1rem;
+            background: rgba(229,85,101,0.06);
+            border: 1px solid rgba(229,85,101,0.15);
+            border-radius: var(--radius);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+        .disclaimer strong { color: var(--red); }
+        /* Scrollbar */
+        .content::-webkit-scrollbar { width: 6px; }
+        .content::-webkit-scrollbar-track { background: transparent; }
+        .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        .content::-webkit-scrollbar-thumb:hover { background: var(--border-light); }
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .mixer-bar { left: 0; }
+            .content { padding: 1.25rem; padding-bottom: calc(var(--mixer-height) + 1.5rem); }
+            .page-header { padding: 0 1.25rem; }
+            .tracks-grid { grid-template-columns: 1fr; }
+        }
+        /* Animations */
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 0 0 0 var(--green-glow); }
+            50% { box-shadow: 0 0 0 4px transparent; }
+        }
+        .track-card.playing { animation: pulse-green 2s ease infinite; }
+        @media (prefers-reduced-motion: reduce) {
+            .track-card.playing { animation: none; }
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <circle cx="14" cy="14" r="13" stroke="#7c6cf0" stroke-width="2"/>
+                <path d="M9 14C9 14 11 8 14 8C17 8 19 14 19 14C19 14 17 20 14 20C11 20 9 14 9 14Z" stroke="#7c6cf0" stroke-width="1.5" fill="rgba(124,108,240,0.15)"/>
+                <circle cx="14" cy="14" r="2" fill="#7c6cf0"/>
+            </svg>
+            <h1><span>Neuro</span>Acoustic</h1>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Browse</div>
+            <a class="sidebar-link active" data-cat="all" onclick="showCategory('all')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                All Sounds
+                <span class="sidebar-count">27</span>
+            </a>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Categories</div>
+            <div id="sidebar-categories"></div>
+        </div>
+
+        <div class="sidebar-footer">
+            <p>Built with the <a href="https://github.com/valter-silva-au/neuro-acustic-engine">NeuroAcoustic Engine</a> — open-source psychoacoustic audio synthesis in Python.</p>
+            <p style="margin-top:0.4rem;">No cloud. No AI voices. Pure frequency science.</p>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main">
+        <header class="page-header">
+            <div class="page-title" id="page-title">All Sounds</div>
+            <span class="page-badge" id="page-badge">27 samples</span>
+            <div class="header-spacer"></div>
+            <button class="header-btn" onclick="toggleTheme()" id="theme-toggle" title="Toggle light/dark theme">
+                <svg id="theme-icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                <svg id="theme-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <span id="theme-label">Light</span>
+            </button>
+            <button class="header-btn" onclick="stopAll()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+                Stop All
+            </button>
+        </header>
+
+        <div class="content" id="content"></div>
+    </div>
+
+    <!-- Mixer Bar -->
+    <div class="mixer-bar">
+        <span class="mixer-label">Mixer</span>
+        <div class="mixer-tracks" id="mixer-tracks">
+            <span class="mixer-empty" id="mixer-empty">Click play on any sound to start mixing</span>
+        </div>
+        <div class="mixer-master">
+            <label>Master</label>
+            <input type="range" min="0" max="100" value="80" class="master-vol" id="master-volume" oninput="setMasterVolume(this.value)">
+            <button class="stop-all-btn" onclick="stopAll()">Stop All</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+// ─── DATA ─────────────────────────────────────────────────────────────────
+const CATALOG = [
+    {
+        id: "binaural-beats",
+        title: "Binaural Beats",
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12C2 12 5 4 12 4C19 4 22 12 22 12C22 12 19 20 12 20C5 20 2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>',
+        description: "Two slightly different frequencies in each ear create a perceived beat in the brain. Requires headphones.",
+        samples: [
+            { id: "binaural-delta-2hz", name: "Delta — 2 Hz", desc: "Deep sleep & recovery. 2 Hz beat on 100 Hz carrier with brown noise.", purpose: "Sleep, physical recovery, deep unconscious processing", research: "Delta entrainment facilitates slow-wave sleep onset (Jirakittayakorn & Wongsawat, 2017)", headphones: true },
+            { id: "binaural-theta-6hz", name: "Theta — 6 Hz", desc: "Meditation & creativity. 6 Hz beat on 150 Hz carrier with brown noise.", purpose: "Meditation, creative insight, memory consolidation", research: "Theta entrainment reduces anxiety and induces meditative states (Lavallee et al., 2011)", headphones: true },
+            { id: "binaural-alpha-10hz", name: "Alpha — 10 Hz", desc: "Calm relaxation. 10 Hz beat on 200 Hz carrier with pink noise.", purpose: "Stress relief, relaxed wakefulness, light meditation", research: "Alpha entrainment reduces cortisol levels (Huang & Charyton, 2008)", headphones: true },
+            { id: "binaural-beta-18hz", name: "Beta — 18 Hz", desc: "Active focus. 18 Hz beat on 250 Hz carrier with pink noise.", purpose: "Concentration, analytical thinking, active problem-solving", research: "Beta entrainment supports sustained attention (Lane et al., 1998)", headphones: true },
+            { id: "binaural-gamma-40hz", name: "Gamma — 40 Hz", desc: "Peak cognition. 40 Hz beat on 300 Hz carrier with pink noise.", purpose: "Memory formation, learning, heightened perception", research: "40 Hz gamma enhances attentional binding and memory encoding (Jirakittayakorn & Wongsawat, 2017)", headphones: true },
+        ]
+    },
+    {
+        id: "isochronic-tones",
+        title: "Isochronic Tones",
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h2m2 0h2m2 0h2m2 0h2m2 0h2"/><path d="M4 8v8m4-6v4m4-8v12m4-6v0m4-4v8"/></svg>',
+        description: "Rhythmic amplitude pulses. Works through speakers — no headphones needed.",
+        samples: [
+            { id: "iso-theta-6hz", name: "Theta Pulse — 6 Hz", desc: "Meditative pulsing at 6 Hz on 180 Hz carrier with brown noise.", purpose: "Meditation, relaxation without headphones", research: "Isochronic tones produce stronger cortical responses than binaural beats (Schwarz & Taylor, 2005)", headphones: false },
+            { id: "iso-alpha-10hz", name: "Alpha Pulse — 10 Hz", desc: "Relaxation pulse at 10 Hz on 250 Hz carrier with pink noise.", purpose: "Calm focus, stress reduction through speakers", research: "10 Hz auditory stimulation increases alpha power (Calomeni et al., 2017)", headphones: false },
+            { id: "iso-beta-18hz", name: "Beta Pulse — 18 Hz", desc: "Focus pulse at 18 Hz on 350 Hz carrier with pink noise.", purpose: "Concentration boost through speakers", research: "Beta-frequency auditory stimulation enhances cognitive performance (Kraus & Porubanová, 2015)", headphones: false },
+            { id: "iso-gamma-40hz", name: "Gamma Pulse — 40 Hz", desc: "Cognition pulse at 40 Hz on 400 Hz carrier with pink noise.", purpose: "Memory and learning enhancement", research: "40 Hz auditory stimulation shows neuroprotective effects (Martorell et al., 2019)", headphones: false },
+        ]
+    },
+    {
+        id: "colored-noise",
+        title: "Colored Noise",
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V16m4 4V12m4 8V8m4 12V10m4 10V14"/></svg>',
+        description: "Spectrally shaped random signals for masking distractions and ambient texture.",
+        samples: [
+            { id: "noise-white", name: "White Noise", desc: "Equal energy at all frequencies. Bright, hissy — like TV static.", purpose: "Maximum masking, tinnitus relief", research: "White noise improves cognitive performance in noisy environments (Söderlund et al., 2007)", headphones: false },
+            { id: "noise-pink", name: "Pink Noise", desc: "Equal energy per octave (1/f). Balanced, natural — like steady rain.", purpose: "Sleep improvement, focus, masking", research: "Pink noise during sleep enhances deep sleep and memory (Zhou et al., 2012)", headphones: false },
+            { id: "noise-brown", name: "Brown Noise", desc: "Low-frequency emphasis (1/f²). Deep, warm — like a waterfall.", purpose: "Deep relaxation, ADHD focus, wind-down", research: "Low-frequency noise activates parasympathetic system (Alvarsson et al., 2010)", headphones: false },
+        ]
+    },
+    {
+        id: "ambient-drones",
+        title: "Ambient Drones",
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4m-3.5-7.5L16 6m-8 12l-1.5 1.5M19.5 19.5L18 18M6 6L4.5 4.5"/></svg>',
+        description: "FM-modulated harmonic tones creating evolving ambient textures.",
+        samples: [
+            { id: "drone-deep-bass", name: "Deep Bass Drone", desc: "55 Hz sub-bass with slow FM modulation. Grounding vibration.", purpose: "Grounding, body awareness, meditation anchor", research: "Low-frequency tones activate vestibular system (Todd & Cody, 2000)", headphones: false },
+            { id: "drone-warm-mid", name: "Warm Mid-Range Drone", desc: "130 Hz drone with gentle harmonics. Comforting, womb-like.", purpose: "Background comfort, stress relief", research: "Sustained tonal environments reduce stress markers (Thoma et al., 2013)", headphones: false },
+            { id: "drone-evolving-harmonic", name: "Evolving Harmonic Drone", desc: "200 Hz base with 5 harmonics and complex modulation.", purpose: "Creative inspiration, ambient soundscaping", research: "Complex tonal environments stimulate default mode network (Taruffi et al., 2017)", headphones: false },
+        ]
+    },
+    {
+        id: "soundscapes",
+        title: "Cognitive Soundscapes",
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+        description: "Multi-layered compositions combining binaural beats, noise, and drones.",
+        samples: [
+            { id: "scape-morning-energizer", name: "Morning Energizer", desc: "18 Hz beta binaural + pink noise + bright drone.", purpose: "Morning alertness, productive start", research: "Beta entrainment optimizes morning cortisol utilization", headphones: true },
+            { id: "scape-deep-focus", name: "Deep Focus", desc: "40 Hz gamma binaural + pink noise + subtle drone.", purpose: "Deep work, coding, complex problem-solving", research: "Gamma entrainment enhances working memory", headphones: true },
+            { id: "scape-creative-flow", name: "Creative Flow", desc: "7 Hz theta binaural + pink noise + evolving drone.", purpose: "Brainstorming, artistic work", research: "Theta-alpha border correlates with creative insight (Lustenberger et al., 2015)", headphones: true },
+            { id: "scape-study-session", name: "Study Session", desc: "40 Hz gamma + 14 Hz beta isochronic + pink noise.", purpose: "Studying, memorization, exam prep", research: "Gamma-beta coupling enhances memory encoding", headphones: true },
+            { id: "scape-stress-relief", name: "Stress Relief", desc: "10 Hz alpha binaural + brown noise + warm drone.", purpose: "Anxiety reduction, decompression", research: "Alpha entrainment reduces state anxiety (Huang & Charyton, 2008)", headphones: true },
+            { id: "scape-power-nap", name: "Power Nap", desc: "5 Hz theta binaural + brown noise + deep drone.", purpose: "Short restorative sleep", research: "Theta entrainment accelerates sleep onset (Abeln et al., 2014)", headphones: true },
+            { id: "scape-sleep-preparation", name: "Sleep Preparation", desc: "2 Hz delta binaural + heavy brown noise + sub-bass.", purpose: "Insomnia relief, deep rest", research: "Delta entrainment promotes slow-wave sleep", headphones: true },
+            { id: "scape-flow-state", name: "Flow State", desc: "10 Hz alpha + 40 Hz gamma isochronic + brown noise + drone.", purpose: "Peak performance, flow induction", research: "Alpha-gamma coupling observed during flow (Katahira et al., 2018)", headphones: true },
+        ]
+    },
+    {
+        id: "educational",
+        title: "Educational Demos",
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
+        description: "Building blocks of psychoacoustic audio engineering.",
+        samples: [
+            { id: "demo-pure-binaural", name: "Pure Binaural Beat", desc: "Raw 10 Hz binaural on 200 Hz carrier. No noise.", purpose: "Understanding binaural beats", research: "Brain perceives phantom beat at |f_right - f_left| Hz", headphones: true },
+            { id: "demo-pure-isochronic", name: "Pure Isochronic Tone", desc: "Raw 10 Hz pulse on 300 Hz carrier. No noise.", purpose: "Understanding isochronic tones", research: "Sharp onsets drive stronger entrainment", headphones: false },
+            { id: "demo-carrier-comparison", name: "Carrier Frequency Comparison", desc: "Same 10 Hz beat at 100, 250, 500 Hz. 40s each.", purpose: "Hear carrier warmth vs brightness", research: "Lower = warmer; higher = more alert", headphones: true },
+            { id: "demo-noise-comparison", name: "Noise Color Comparison", desc: "White → pink → brown noise. 40s each.", purpose: "Hear spectral differences", research: "White=flat, Pink=1/f, Brown=1/f²", headphones: false },
+        ]
+    }
+];
+
+// ─── WAVEFORM COLORS (one per track, cycles through palette) ──────────
+const WAVE_COLORS = [
+    [124, 108, 240],  // purple
+    [30, 215, 96],    // green
+    [80, 200, 240],   // cyan
+    [240, 160, 80],   // orange
+    [229, 85, 101],   // red/pink
+    [240, 200, 60],   // yellow
+    [160, 120, 255],  // lavender
+    [80, 240, 180],   // mint
+];
+let colorIndex = 0;
+
+// ─── AUDIO ENGINE (Web Audio API) ──────────────────────────────────────
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+const masterGain = audioCtx.createGain();
+masterGain.gain.value = 0.8;
+masterGain.connect(audioCtx.destination);
+
+const activeTracks = {}; // id -> { source, gainNode, audio, analyser, loop, color }
+
+function resumeAudio() {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+function playTrack(id) {
+    resumeAudio();
+    if (activeTracks[id]) { stopTrack(id); return; }
+
+    const audio = new Audio(`samples/${id}.wav`);
+    audio.crossOrigin = "anonymous";
+    audio.loop = true;
+
+    const source = audioCtx.createMediaElementSource(audio);
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.value = 0.7;
+    const analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 128;
+
+    source.connect(gainNode);
+    gainNode.connect(analyser);
+    analyser.connect(masterGain);
+
+    const color = WAVE_COLORS[colorIndex % WAVE_COLORS.length];
+    colorIndex++;
+
+    audio.play();
+    activeTracks[id] = { source, gainNode, audio, analyser, loop: true, color };
+
+    updateCardState(id);
+    updateMixerBar();
+    startWaveform(id);
+}
+
+function stopTrack(id) {
+    const t = activeTracks[id];
+    if (!t) return;
+    if (waveformFrames[id]) { cancelAnimationFrame(waveformFrames[id]); delete waveformFrames[id]; }
+    t.audio.pause();
+    t.audio.src = '';
+    t.source.disconnect();
+    t.gainNode.disconnect();
+    t.analyser.disconnect();
+    delete activeTracks[id];
+    updateCardState(id);
+    updateMixerBar();
+    // Clear canvas
+    const canvas = document.getElementById(`waveform-${id}`);
+    if (canvas) { const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height); }
+}
+
+function stopAll() {
+    Object.keys(activeTracks).forEach(stopTrack);
+}
+
+function setTrackVolume(id, vol) {
+    if (activeTracks[id]) activeTracks[id].gainNode.gain.value = vol / 100;
+    // Update volume label on the card
+    const label = document.querySelector(`#card-${CSS.escape(id)} .volume-label`);
+    if (label) label.textContent = vol + '%';
+}
+
+function toggleLoop(id) {
+    const t = activeTracks[id];
+    if (!t) return;
+    t.loop = !t.loop;
+    t.audio.loop = t.loop;
+    updateCardState(id);
+}
+
+function setMasterVolume(val) {
+    masterGain.gain.value = val / 100;
+}
+
+// ─── WAVEFORM VISUALIZATION ───────────────────────────────────────────
+const waveformFrames = {};
+
+function startWaveform(id) {
+    const canvas = document.getElementById(`waveform-${id}`);
+    if (!canvas || !activeTracks[id]) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = canvas.offsetWidth * 2;
+    canvas.height = canvas.offsetHeight * 2;
+    const [cr, cg, cb] = activeTracks[id].color;
+
+    function draw() {
+        if (!activeTracks[id]) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            delete waveformFrames[id];
+            return;
+        }
+        waveformFrames[id] = requestAnimationFrame(draw);
+        const analyser = activeTracks[id].analyser;
+        const data = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(data);
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const barW = (canvas.width / data.length) * 0.8;
+        const gap = (canvas.width / data.length) * 0.2;
+
+        for (let i = 0; i < data.length; i++) {
+            const h = (data[i] / 255) * canvas.height * 0.9;
+            const x = i * (barW + gap);
+            const y = (canvas.height - h) / 2;
+            ctx.fillStyle = `rgba(${cr}, ${cg}, ${cb}, ${0.3 + (data[i]/255) * 0.7})`;
+            ctx.fillRect(x, y, barW, h);
+        }
+    }
+    draw();
+}
+
+// ─── UI RENDERING ─────────────────────────────────────────────────────
+let currentCategory = 'all';
+
+function getSampleById(id) {
+    for (const cat of CATALOG) for (const s of cat.samples) if (s.id === id) return { ...s, catTitle: cat.title };
+    return null;
+}
+
+function showCategory(catId) {
+    currentCategory = catId;
+    document.querySelectorAll('.sidebar-link').forEach(el => {
+        el.classList.toggle('active', el.dataset.cat === catId);
+    });
+    renderContent();
+    // Restart waveforms for any playing tracks (new canvases created)
+    Object.keys(activeTracks).forEach(id => startWaveform(id));
+}
+
+function renderSidebar() {
+    const container = document.getElementById('sidebar-categories');
+    container.innerHTML = CATALOG.map(cat => `
+        <a class="sidebar-link" data-cat="${cat.id}" onclick="showCategory('${cat.id}')">
+            ${cat.icon}
+            ${cat.title}
+            <span class="sidebar-count">${cat.samples.length}</span>
+        </a>
+    `).join('');
+}
+
+function renderContent() {
+    const el = document.getElementById('content');
+    const cats = currentCategory === 'all' ? CATALOG : CATALOG.filter(c => c.id === currentCategory);
+    const totalSamples = cats.reduce((n, c) => n + c.samples.length, 0);
+
+    document.getElementById('page-title').textContent = currentCategory === 'all' ? 'All Sounds' : cats[0]?.title || '';
+    document.getElementById('page-badge').textContent = `${totalSamples} sample${totalSamples !== 1 ? 's' : ''}`;
+
+    let html = `<div class="disclaimer"><strong>Disclaimer:</strong> These audio files are for informational and experimental purposes. Not medical devices. If you have epilepsy or seizure disorders, consult a physician before use. Do not listen while driving.</div>`;
+
+    cats.forEach(cat => {
+        html += `<section class="category-section" id="cat-${cat.id}">
+            <div class="category-header">
+                <div class="category-title">${cat.title}</div>
+                <div class="category-desc">${cat.description}</div>
+            </div>
+            <div class="tracks-grid">
+                ${cat.samples.map(s => renderTrackCard(s)).join('')}
+            </div>
+        </section>`;
+    });
+
+    el.innerHTML = html;
+}
+
+function renderTrackCard(s) {
+    const isPlaying = !!activeTracks[s.id];
+    const isLooping = activeTracks[s.id]?.loop ?? true;
+    const vol = activeTracks[s.id] ? Math.round(activeTracks[s.id].gainNode.gain.value * 100) : 70;
+
+    return `<div class="track-card ${isPlaying ? 'playing' : ''}" id="card-${s.id}">
+        <div class="track-top">
+            <div class="track-name">${s.name}</div>
+            <span class="track-badge ${s.headphones ? 'badge-headphones' : 'badge-speakers'}">${s.headphones ? 'Headphones' : 'Speakers OK'}</span>
+        </div>
+        <div class="track-desc">${s.desc}</div>
+        <div class="track-purpose"><strong>Purpose:</strong> ${s.purpose}</div>
+        <div class="track-research">${s.research}</div>
+        <div class="track-waveform"><canvas id="waveform-${s.id}"></canvas></div>
+        <div class="track-controls">
+            <button class="ctrl-btn play-btn ${isPlaying ? 'playing' : ''}" onclick="playTrack('${s.id}')" title="${isPlaying ? 'Stop' : 'Play'}">
+                ${isPlaying
+                    ? '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>'
+                    : '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v14.72a1 1 0 0 0 1.5.86l12-7.36a1 1 0 0 0 0-1.72l-12-7.36A1 1 0 0 0 8 5.14z"/></svg>'}
+            </button>
+            <button class="ctrl-btn ${isLooping && isPlaying ? 'active' : ''}" onclick="toggleLoop('${s.id}')" title="Loop">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+            </button>
+            <input type="range" class="track-volume" min="0" max="100" value="${vol}" oninput="setTrackVolume('${s.id}', this.value)">
+            <span class="volume-label mono">${vol}%</span>
+        </div>
+    </div>`;
+}
+
+// ─── SURGICAL UI UPDATES (no DOM rebuild) ─────────────────────────────
+function updateCardState(id) {
+    const card = document.getElementById(`card-${CSS.escape(id)}`);
+    if (!card) return;
+
+    const isPlaying = !!activeTracks[id];
+    const isLooping = activeTracks[id]?.loop ?? true;
+
+    // Update card playing class
+    card.classList.toggle('playing', isPlaying);
+
+    // Update play button
+    const playBtn = card.querySelector('.play-btn');
+    if (playBtn) {
+        playBtn.classList.toggle('playing', isPlaying);
+        playBtn.title = isPlaying ? 'Stop' : 'Play';
+        playBtn.innerHTML = isPlaying
+            ? '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>'
+            : '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v14.72a1 1 0 0 0 1.5.86l12-7.36a1 1 0 0 0 0-1.72l-12-7.36A1 1 0 0 0 8 5.14z"/></svg>';
+    }
+
+    // Update loop button
+    const loopBtn = card.querySelectorAll('.ctrl-btn')[1];
+    if (loopBtn) {
+        loopBtn.classList.toggle('active', isLooping && isPlaying);
+    }
+}
+
+function updateMixerBar() {
+    const ids = Object.keys(activeTracks);
+    const container = document.getElementById('mixer-tracks');
+
+    if (ids.length === 0) {
+        container.innerHTML = '<span class="mixer-empty">Click play on any sound to start mixing</span>';
+        return;
+    }
+
+    container.innerHTML = ids.map(id => {
+        const s = getSampleById(id);
+        const vol = Math.round(activeTracks[id].gainNode.gain.value * 100);
+        const [cr, cg, cb] = activeTracks[id].color;
+        return `<div class="mixer-track">
+            <span style="width:8px;height:8px;border-radius:50%;background:rgb(${cr},${cg},${cb});flex-shrink:0"></span>
+            <span class="mixer-track-name" title="${s?.name || id}">${s?.name || id}</span>
+            <input type="range" class="mixer-vol" min="0" max="100" value="${vol}" oninput="setTrackVolume('${id}', this.value)">
+            <button class="mixer-remove" onclick="stopTrack('${id}')" title="Remove">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+        </div>`;
+    }).join('');
+}
+
+// ─── THEME TOGGLE ─────────────────────────────────────────────────────
+function getPreferredTheme() {
+    const stored = localStorage.getItem("na-theme");
+    if (stored) return stored;
+    return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+}
+
+function applyTheme(theme) {
+    if (theme === "light") {
+        document.documentElement.setAttribute("data-theme", "light");
+    } else {
+        document.documentElement.removeAttribute("data-theme");
+    }
+    const iconDark = document.getElementById("theme-icon-dark");
+    const iconLight = document.getElementById("theme-icon-light");
+    const label = document.getElementById("theme-label");
+    if (iconDark && iconLight && label) {
+        iconDark.style.display = theme === "light" ? "block" : "none";
+        iconLight.style.display = theme === "light" ? "none" : "block";
+        label.textContent = theme === "light" ? "Dark" : "Light";
+    }
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+    const next = current === "light" ? "dark" : "light";
+    localStorage.setItem("na-theme", next);
+    applyTheme(next);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────
+applyTheme(getPreferredTheme());
+renderSidebar();
+renderContent();
+</script>
+</body>
+</html>

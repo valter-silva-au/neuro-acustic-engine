@@ -1,0 +1,821 @@
+{
+  "categories": {
+    "binaural-beats": {
+      "title": "Binaural Beats",
+      "description": "Two slightly different frequencies in each ear create a perceived beat in the brain. Requires headphones.",
+      "samples": [
+        {
+          "id": "binaural-delta-2hz",
+          "name": "Delta \u2014 2 Hz",
+          "description": "Deep sleep & recovery. 2 Hz beat on 100 Hz carrier with brown noise bed.",
+          "purpose": "Sleep, physical recovery, deep unconscious processing",
+          "research": "Delta entrainment facilitates slow-wave sleep onset (Jirakittayakorn & Wongsawat, 2017)",
+          "headphones": true,
+          "layers": [
+            "<function make_binaural_layer.<locals>.fn at 0x7176f66c71a0>",
+            "<function make_noise_layer.<locals>.fn at 0x7176f66c7240>"
+          ]
+        },
+        {
+          "id": "binaural-theta-6hz",
+          "name": "Theta \u2014 6 Hz",
+          "description": "Meditation & creativity. 6 Hz beat on 150 Hz carrier with brown noise.",
+          "purpose": "Meditation, creative insight, memory consolidation",
+          "research": "Theta entrainment reduces anxiety and induces meditative states (Lavallee et al., 2011)",
+          "headphones": true,
+          "layers": [
+            "<function make_binaural_layer.<locals>.fn at 0x7176f66c72e0>",
+            "<function make_noise_layer.<locals>.fn at 0x7176f66c7380>"
+          ]
+        },
+        {
+          "id": "binaural-alpha-10hz",
+          "name": "Alpha \u2014 10 Hz",
+          "description": "Calm relaxation. 10 Hz beat on 200 Hz carrier with pink noise.",
+          "purpose": "Stress relief, relaxed wakefulness, light meditation",
+          "research": "Alpha entrainment reduces cortisol levels (Huang & Charyton, 2008)",
+          "headphones": true,
+          "layers": [
+            "<function make_binaural_layer.<locals>.fn at 0x7176f66c7420>",
+            "<function make_noise_layer.<locals>.fn at 0x7176f66c74c0>"
+          ]
+        },
+        {
+          "id": "binaural-beta-18hz",
+          "name": "Beta \u2014 18 Hz",
+          "description": "Active focus. 18 Hz beat on 250 Hz carrier with pink noise.",
+          "purpose": "Concentration, analytical thinking, active problem-solving",
+          "research": "Beta entrainment supports sustained attention (Lane et al., 1998)",
+          "headphones": true,
+          "layers": [
+            "<function make_binaural_layer.<locals>.fn at 0x7176f66c7560>",
+            "<function make_noise_layer.<locals>.fn at 0x7176f66c7600>"
+          ]
+        },
+        {
+          "id": "binaural-gamma-40hz",
+          "name": "Gamma \u2014 40 Hz",
+          "description": "Peak cognition. 40 Hz beat on 300 Hz carrier with pink noise.",
+          "purpose": "Memory formation, learning, heightened perception",
+          "research": "40 Hz gamma enhances attentional binding and memory encoding (Jirakittayakorn & Wongsawat, 2017)",
+          "headphones": true,
+          "layers": [
+            "<function make_binaural_layer.<locals>.fn at 0x7176f66c76a0>",
+            "<function make_noise_layer.<locals>.fn at 0x7176f66c7740>"
+          ]
+        }
+      ]
+    },
+    "isochronic-tones": {
+      "title": "Isochronic Tones",
+      "description": "Rhythmic amplitude pulses that entrain brainwaves through sharp on/off patterns. Works through speakers \u2014 no headphones needed.",
+      "samples": [
+        {
+          "id": "iso-theta-6hz",
+          "name": "Theta Pulse \u2014 6 Hz",
+          "description": "Meditative pulsing at 6 Hz on a 180 Hz carrier with brown noise.",
+          "purpose": "Meditation, relaxation without headphones",
+          "research": "Isochronic tones produce stronger cortical steady-state responses than binaural beats (Schwarz & Taylor, 2005)",
+          "headphones": false,
+          "layers": [
+            "<function make_isochronic_layer.<locals>.fn at 0x7176f66c77e0>",
+            "<function make_noise_layer.<locals>.fn at 0x7176f66c7880>"
+          ]
+        },
+        {
+          "id": "iso-alpha-10hz",
+          "name": "Alpha Pulse \u2014 10 Hz",
+          "description": "Relaxation pulse at 10 Hz on a 250 Hz carrier with pink noise.",
+          "purpose": "Calm focus, stress reduction through speakers",
+          "research": "10 Hz auditory stimulation increases alpha power (Calomeni et al., 2017)",
+          "headphones": false,
+          "layers": [
+            "<function make_isochronic_layer.<locals>.fn at 0x7176f66c7920>",
+            "<function make_noise_layer.<locals>.fn at 0x7176f66c79c0>"
+          ]
+        },
+        {
+          "id": "iso-beta-18hz",
+          "name": "Beta Pulse \u2014 18 Hz",
+          "description": "Focus pulse at 18 Hz on a 350 Hz carrier with pink noise.",
+          "purpose": "Concentration boost through speakers",
+          "research": "Beta-frequency auditory stimulation enhances cognitive performance (Kraus & Porubanov\u00e1, 2015)",
+          "headphones": false,
+          "layers": [
+            "<function make_isochronic_layer.<locals>.fn at 0x7176f66c7b00>",
+            "<function make_noise_layer.<locals>.fn at 0x7176f66c7ba0>"
+          ]
+        },
+        {
+          "id": "iso-gamma-40hz",
+          "name": "Gamma Pulse \u2014 40 Hz",
+          "description": "Cognition pulse at 40 Hz on a 400 Hz carrier with pink noise.",
+          "purpose": "Memory and learning enhancement through speakers",
+          "research": "40 Hz auditory stimulation shows neuroprotective effects (Martorell et al., 2019 \u2014 Nature)",
+          "headphones": false,
+          "layers": [
+            "<function make_isochronic_layer.<locals>.fn at 0x7176f66c7ce0>",
+            "<function make_noise_layer.<locals>.fn at 0x7176f66c7d80>"
+          ]
+        }
+      ]
+    },
+    "colored-noise": {
+      "title": "Colored Noise",
+      "description": "Spectrally shaped random signals used for masking distractions and creating ambient texture.",
+      "samples": [
+        {
+          "id": "noise-white",
+          "name": "White Noise",
+          "description": "Equal energy at all frequencies. Bright, hissy texture like TV static.",
+          "purpose": "Maximum masking of environmental sounds, tinnitus relief",
+          "research": "White noise improves cognitive performance in noisy environments (S\u00f6derlund et al., 2007)",
+          "headphones": false,
+          "layers": [
+            "<function make_noise_layer.<locals>.fn at 0x7176f66c7e20>"
+          ]
+        },
+        {
+          "id": "noise-pink",
+          "name": "Pink Noise",
+          "description": "Equal energy per octave (1/f spectrum). Balanced, natural \u2014 like steady rainfall.",
+          "purpose": "Sleep improvement, focus, background masking",
+          "research": "Pink noise during sleep enhances deep sleep and memory (Zhou et al., 2012)",
+          "headphones": false,
+          "layers": [
+            "<function make_noise_layer.<locals>.fn at 0x7176f66c7ec0>"
+          ]
+        },
+        {
+          "id": "noise-brown",
+          "name": "Brown Noise",
+          "description": "Low-frequency emphasis (1/f\u00b2 spectrum). Deep, warm rumble like a waterfall.",
+          "purpose": "Deep relaxation, focus for ADHD, wind-down",
+          "research": "Low-frequency noise activates parasympathetic nervous system (Alvarsson et al., 2010)",
+          "headphones": false,
+          "layers": [
+            "<function make_noise_layer.<locals>.fn at 0x7176f66c7f60>"
+          ]
+        }
+      ]
+    },
+    "ambient-drones": {
+      "title": "Ambient Drones",
+      "description": "Frequency-modulated harmonic tones that create evolving ambient textures. Subliminal harmonic anchoring for immersion.",
+      "samples": [
+        {
+          "id": "drone-deep-bass",
+          "name": "Deep Bass Drone",
+          "description": "55 Hz sub-bass with slow FM modulation. Grounding, meditative vibration.",
+          "purpose": "Grounding, body awareness, meditation anchor",
+          "research": "Low-frequency tones activate vestibular system and promote relaxation (Todd & Cody, 2000)",
+          "headphones": false,
+          "layers": [
+            "<function make_drone_layer.<locals>.fn at 0x7176f66d8040>",
+            "<function make_noise_layer.<locals>.fn at 0x7176f66d80e0>"
+          ]
+        },
+        {
+          "id": "drone-warm-mid",
+          "name": "Warm Mid-Range Drone",
+          "description": "130 Hz drone with gentle harmonics. Comforting, womb-like.",
+          "purpose": "Background comfort, stress relief, ambient fill",
+          "research": "Sustained tonal environments reduce physiological stress markers (Thoma et al., 2013)",
+          "headphones": false,
+          "layers": [
+            "<function make_drone_layer.<locals>.fn at 0x7176f66d8180>",
+            "<function make_noise_layer.<locals>.fn at 0x7176f66d8220>"
+          ]
+        },
+        {
+          "id": "drone-evolving-harmonic",
+          "name": "Evolving Harmonic Drone",
+          "description": "200 Hz base with 5 harmonics and complex modulation. Slowly shifting timbre.",
+          "purpose": "Creative inspiration, ambient soundscaping",
+          "research": "Complex tonal environments stimulate default mode network activity (Taruffi et al., 2017)",
+          "headphones": false,
+          "layers": [
+            "<function make_drone_layer.<locals>.fn at 0x7176f66d82c0>",
+            "<function make_noise_layer.<locals>.fn at 0x7176f66d8360>"
+          ]
+        }
+      ]
+    },
+    "soundscapes": {
+      "title": "Cognitive Soundscapes",
+      "description": "Multi-layered compositions combining binaural beats, noise, and drones for specific cognitive states.",
+      "samples": [
+        {
+          "id": "scape-morning-energizer",
+          "name": "Morning Energizer",
+          "description": "18 Hz beta binaural + pink noise + bright drone. Wake up and activate.",
+          "purpose": "Morning alertness, energy boost, productive start",
+          "research": "Beta entrainment combined with moderate noise optimizes morning cortisol utilization",
+          "headphones": true,
+          "layers": [
+            "<function make_binaural_layer.<locals>.fn at 0x7176f66d8400>",
+            "<function make_noise_layer.<locals>.fn at 0x7176f66d84a0>",
+            "<function make_drone_layer.<locals>.fn at 0x7176f66d8540>"
+          ]
+        },
+        {
+          "id": "scape-deep-focus",
+          "name": "Deep Focus",
+          "description": "40 Hz gamma binaural + pink noise + subtle drone. Maximum concentration.",
+          "purpose": "Deep work, coding, complex problem-solving",
+          "research": "Gamma entrainment enhances working memory and sustained attention",
+          "headphones": true,
+          "layers": [
+            "<function make_binaural_layer.<locals>.fn at 0x7176f66d85e0>",
+            "<function make_noise_layer.<locals>.fn at 0x7176f66d8680>",
+            "<function make_drone_layer.<locals>.fn at 0x7176f66d8720>"
+          ]
+        },
+        {
+          "id": "scape-creative-flow",
+          "name": "Creative Flow",
+          "description": "7 Hz theta binaural + pink noise + evolving drone. Unlock divergent thinking.",
+          "purpose": "Brainstorming, artistic work, creative problem-solving",
+          "research": "Theta-alpha border states correlate with creative insight (Lustenberger et al., 2015)",
+          "headphones": true,
+          "layers": [
+            "<function make_binaural_layer.<locals>.fn at 0x7176f66d87c0>",
+            "<function make_noise_layer.<locals>.fn at 0x7176f66d8860>",
+            "<function make_drone_layer.<locals>.fn at 0x7176f66d8900>"
+          ]
+        },
+        {
+          "id": "scape-study-session",
+          "name": "Study Session",
+          "description": "40 Hz gamma binaural + 14 Hz beta isochronic + pink noise. Dual entrainment for learning.",
+          "purpose": "Studying, memorization, exam preparation",
+          "research": "Gamma-beta coupling enhances memory encoding and retrieval",
+          "headphones": true,
+          "layers": [
+            "<function make_binaural_layer.<locals>.fn at 0x7176f66d89a0>",
+            "<function make_isochronic_layer.<locals>.fn at 0x7176f66d8a40>",
+            "<function make_noise_layer.<locals>.fn at 0x7176f66d8ae0>"
+          ]
+        },
+        {
+          "id": "scape-stress-relief",
+          "name": "Stress Relief",
+          "description": "10 Hz alpha binaural + brown noise + warm drone. Decompress and let go.",
+          "purpose": "Anxiety reduction, post-work decompression, emotional regulation",
+          "research": "Alpha entrainment reduces state anxiety scores (Huang & Charyton, 2008)",
+          "headphones": true,
+          "layers": [
+            "<function make_binaural_layer.<locals>.fn at 0x7176f66d8b80>",
+            "<function make_noise_layer.<locals>.fn at 0x7176f66d8c20>",
+            "<function make_drone_layer.<locals>.fn at 0x7176f66d8cc0>"
+          ]
+        },
+        {
+          "id": "scape-power-nap",
+          "name": "Power Nap",
+          "description": "5 Hz theta binaural + brown noise + deep drone. 20-minute nap optimization.",
+          "purpose": "Short restorative sleep, energy recovery",
+          "research": "Theta entrainment accelerates sleep onset latency (Abeln et al., 2014)",
+          "headphones": true,
+          "layers": [
+            "<function make_binaural_layer.<locals>.fn at 0x7176f66d8d60>",
+            "<function make_noise_layer.<locals>.fn at 0x7176f66d8e00>",
+            "<function make_drone_layer.<locals>.fn at 0x7176f66d8ea0>"
+          ]
+        },
+        {
+          "id": "scape-sleep-preparation",
+          "name": "Sleep Preparation",
+          "description": "2 Hz delta binaural + heavy brown noise + ultra-slow sub-bass. Drift into deep sleep.",
+          "purpose": "Insomnia relief, sleep onset, deep rest",
+          "research": "Delta entrainment with low-frequency noise promotes slow-wave sleep",
+          "headphones": true,
+          "layers": [
+            "<function make_binaural_layer.<locals>.fn at 0x7176f66d8f40>",
+            "<function make_noise_layer.<locals>.fn at 0x7176f66d8fe0>",
+            "<function make_drone_layer.<locals>.fn at 0x7176f66d9080>"
+          ]
+        },
+        {
+          "id": "scape-flow-state",
+          "name": "Flow State",
+          "description": "10 Hz alpha binaural + 40 Hz gamma isochronic + brown noise + drone. Alpha-gamma coupling.",
+          "purpose": "Peak performance, athletic visualization, flow state induction",
+          "research": "Alpha-gamma cross-frequency coupling observed during flow (Katahira et al., 2018)",
+          "headphones": true,
+          "layers": [
+            "<function make_binaural_layer.<locals>.fn at 0x7176f66d9120>",
+            "<function make_isochronic_layer.<locals>.fn at 0x7176f66d91c0>",
+            "<function make_noise_layer.<locals>.fn at 0x7176f66d9260>",
+            "<function make_drone_layer.<locals>.fn at 0x7176f66d9300>"
+          ]
+        }
+      ]
+    },
+    "educational": {
+      "title": "Educational Demos",
+      "description": "Demonstrations that illustrate the building blocks of psychoacoustic audio engineering.",
+      "samples": [
+        {
+          "id": "demo-pure-binaural",
+          "name": "Pure Binaural Beat (No Noise)",
+          "description": "Raw 10 Hz binaural beat on 200 Hz carrier. Hear the beat frequency clearly in isolation.",
+          "purpose": "Understanding how binaural beats work",
+          "research": "The brain perceives a phantom beat at |f_right - f_left| Hz",
+          "headphones": true,
+          "layers": [
+            "<function make_binaural_layer.<locals>.fn at 0x7176f66d93a0>"
+          ]
+        },
+        {
+          "id": "demo-pure-isochronic",
+          "name": "Pure Isochronic Tone (No Noise)",
+          "description": "Raw 10 Hz isochronic pulse on 300 Hz carrier. Hear the rhythmic amplitude modulation.",
+          "purpose": "Understanding how isochronic tones work",
+          "research": "Sharp amplitude onsets drive stronger neural entrainment than smooth beats",
+          "headphones": false,
+          "layers": [
+            "<function make_isochronic_layer.<locals>.fn at 0x7176f66d9440>"
+          ]
+        },
+        {
+          "id": "demo-carrier-comparison",
+          "name": "Carrier Frequency Comparison",
+          "description": "Same 10 Hz beat at three carriers: 100 Hz (deep), 250 Hz (mid), 500 Hz (bright). 40s each.",
+          "purpose": "Hear how carrier frequency affects perceived warmth/brightness",
+          "research": "Lower carriers feel warmer; higher carriers feel more alert",
+          "headphones": true,
+          "layers": "custom_carrier_comparison"
+        },
+        {
+          "id": "demo-noise-comparison",
+          "name": "Noise Color Comparison",
+          "description": "White, pink, then brown noise \u2014 40 seconds each. Hear the spectral differences.",
+          "purpose": "Understanding noise color characteristics",
+          "research": "White=flat, Pink=1/f (balanced), Brown=1/f\u00b2 (deep)",
+          "headphones": false,
+          "layers": "custom_noise_comparison"
+        }
+      ]
+    }
+  },
+  "generated": [
+    {
+      "category": "binaural-beats",
+      "category_title": "Binaural Beats",
+      "category_description": "Two slightly different frequencies in each ear create a perceived beat in the brain. Requires headphones.",
+      "id": "binaural-delta-2hz",
+      "name": "Delta \u2014 2 Hz",
+      "description": "Deep sleep & recovery. 2 Hz beat on 100 Hz carrier with brown noise bed.",
+      "purpose": "Sleep, physical recovery, deep unconscious processing",
+      "research": "Delta entrainment facilitates slow-wave sleep onset (Jirakittayakorn & Wongsawat, 2017)",
+      "headphones": true,
+      "layers": [
+        "<function make_binaural_layer.<locals>.fn at 0x7176f66c71a0>",
+        "<function make_noise_layer.<locals>.fn at 0x7176f66c7240>"
+      ],
+      "filename": "binaural-delta-2hz.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "binaural-beats",
+      "category_title": "Binaural Beats",
+      "category_description": "Two slightly different frequencies in each ear create a perceived beat in the brain. Requires headphones.",
+      "id": "binaural-theta-6hz",
+      "name": "Theta \u2014 6 Hz",
+      "description": "Meditation & creativity. 6 Hz beat on 150 Hz carrier with brown noise.",
+      "purpose": "Meditation, creative insight, memory consolidation",
+      "research": "Theta entrainment reduces anxiety and induces meditative states (Lavallee et al., 2011)",
+      "headphones": true,
+      "layers": [
+        "<function make_binaural_layer.<locals>.fn at 0x7176f66c72e0>",
+        "<function make_noise_layer.<locals>.fn at 0x7176f66c7380>"
+      ],
+      "filename": "binaural-theta-6hz.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "binaural-beats",
+      "category_title": "Binaural Beats",
+      "category_description": "Two slightly different frequencies in each ear create a perceived beat in the brain. Requires headphones.",
+      "id": "binaural-alpha-10hz",
+      "name": "Alpha \u2014 10 Hz",
+      "description": "Calm relaxation. 10 Hz beat on 200 Hz carrier with pink noise.",
+      "purpose": "Stress relief, relaxed wakefulness, light meditation",
+      "research": "Alpha entrainment reduces cortisol levels (Huang & Charyton, 2008)",
+      "headphones": true,
+      "layers": [
+        "<function make_binaural_layer.<locals>.fn at 0x7176f66c7420>",
+        "<function make_noise_layer.<locals>.fn at 0x7176f66c74c0>"
+      ],
+      "filename": "binaural-alpha-10hz.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "binaural-beats",
+      "category_title": "Binaural Beats",
+      "category_description": "Two slightly different frequencies in each ear create a perceived beat in the brain. Requires headphones.",
+      "id": "binaural-beta-18hz",
+      "name": "Beta \u2014 18 Hz",
+      "description": "Active focus. 18 Hz beat on 250 Hz carrier with pink noise.",
+      "purpose": "Concentration, analytical thinking, active problem-solving",
+      "research": "Beta entrainment supports sustained attention (Lane et al., 1998)",
+      "headphones": true,
+      "layers": [
+        "<function make_binaural_layer.<locals>.fn at 0x7176f66c7560>",
+        "<function make_noise_layer.<locals>.fn at 0x7176f66c7600>"
+      ],
+      "filename": "binaural-beta-18hz.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "binaural-beats",
+      "category_title": "Binaural Beats",
+      "category_description": "Two slightly different frequencies in each ear create a perceived beat in the brain. Requires headphones.",
+      "id": "binaural-gamma-40hz",
+      "name": "Gamma \u2014 40 Hz",
+      "description": "Peak cognition. 40 Hz beat on 300 Hz carrier with pink noise.",
+      "purpose": "Memory formation, learning, heightened perception",
+      "research": "40 Hz gamma enhances attentional binding and memory encoding (Jirakittayakorn & Wongsawat, 2017)",
+      "headphones": true,
+      "layers": [
+        "<function make_binaural_layer.<locals>.fn at 0x7176f66c76a0>",
+        "<function make_noise_layer.<locals>.fn at 0x7176f66c7740>"
+      ],
+      "filename": "binaural-gamma-40hz.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "isochronic-tones",
+      "category_title": "Isochronic Tones",
+      "category_description": "Rhythmic amplitude pulses that entrain brainwaves through sharp on/off patterns. Works through speakers \u2014 no headphones needed.",
+      "id": "iso-theta-6hz",
+      "name": "Theta Pulse \u2014 6 Hz",
+      "description": "Meditative pulsing at 6 Hz on a 180 Hz carrier with brown noise.",
+      "purpose": "Meditation, relaxation without headphones",
+      "research": "Isochronic tones produce stronger cortical steady-state responses than binaural beats (Schwarz & Taylor, 2005)",
+      "headphones": false,
+      "layers": [
+        "<function make_isochronic_layer.<locals>.fn at 0x7176f66c77e0>",
+        "<function make_noise_layer.<locals>.fn at 0x7176f66c7880>"
+      ],
+      "filename": "iso-theta-6hz.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "isochronic-tones",
+      "category_title": "Isochronic Tones",
+      "category_description": "Rhythmic amplitude pulses that entrain brainwaves through sharp on/off patterns. Works through speakers \u2014 no headphones needed.",
+      "id": "iso-alpha-10hz",
+      "name": "Alpha Pulse \u2014 10 Hz",
+      "description": "Relaxation pulse at 10 Hz on a 250 Hz carrier with pink noise.",
+      "purpose": "Calm focus, stress reduction through speakers",
+      "research": "10 Hz auditory stimulation increases alpha power (Calomeni et al., 2017)",
+      "headphones": false,
+      "layers": [
+        "<function make_isochronic_layer.<locals>.fn at 0x7176f66c7920>",
+        "<function make_noise_layer.<locals>.fn at 0x7176f66c79c0>"
+      ],
+      "filename": "iso-alpha-10hz.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "isochronic-tones",
+      "category_title": "Isochronic Tones",
+      "category_description": "Rhythmic amplitude pulses that entrain brainwaves through sharp on/off patterns. Works through speakers \u2014 no headphones needed.",
+      "id": "iso-beta-18hz",
+      "name": "Beta Pulse \u2014 18 Hz",
+      "description": "Focus pulse at 18 Hz on a 350 Hz carrier with pink noise.",
+      "purpose": "Concentration boost through speakers",
+      "research": "Beta-frequency auditory stimulation enhances cognitive performance (Kraus & Porubanov\u00e1, 2015)",
+      "headphones": false,
+      "layers": [
+        "<function make_isochronic_layer.<locals>.fn at 0x7176f66c7b00>",
+        "<function make_noise_layer.<locals>.fn at 0x7176f66c7ba0>"
+      ],
+      "filename": "iso-beta-18hz.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "isochronic-tones",
+      "category_title": "Isochronic Tones",
+      "category_description": "Rhythmic amplitude pulses that entrain brainwaves through sharp on/off patterns. Works through speakers \u2014 no headphones needed.",
+      "id": "iso-gamma-40hz",
+      "name": "Gamma Pulse \u2014 40 Hz",
+      "description": "Cognition pulse at 40 Hz on a 400 Hz carrier with pink noise.",
+      "purpose": "Memory and learning enhancement through speakers",
+      "research": "40 Hz auditory stimulation shows neuroprotective effects (Martorell et al., 2019 \u2014 Nature)",
+      "headphones": false,
+      "layers": [
+        "<function make_isochronic_layer.<locals>.fn at 0x7176f66c7ce0>",
+        "<function make_noise_layer.<locals>.fn at 0x7176f66c7d80>"
+      ],
+      "filename": "iso-gamma-40hz.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "colored-noise",
+      "category_title": "Colored Noise",
+      "category_description": "Spectrally shaped random signals used for masking distractions and creating ambient texture.",
+      "id": "noise-white",
+      "name": "White Noise",
+      "description": "Equal energy at all frequencies. Bright, hissy texture like TV static.",
+      "purpose": "Maximum masking of environmental sounds, tinnitus relief",
+      "research": "White noise improves cognitive performance in noisy environments (S\u00f6derlund et al., 2007)",
+      "headphones": false,
+      "layers": [
+        "<function make_noise_layer.<locals>.fn at 0x7176f66c7e20>"
+      ],
+      "filename": "noise-white.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "colored-noise",
+      "category_title": "Colored Noise",
+      "category_description": "Spectrally shaped random signals used for masking distractions and creating ambient texture.",
+      "id": "noise-pink",
+      "name": "Pink Noise",
+      "description": "Equal energy per octave (1/f spectrum). Balanced, natural \u2014 like steady rainfall.",
+      "purpose": "Sleep improvement, focus, background masking",
+      "research": "Pink noise during sleep enhances deep sleep and memory (Zhou et al., 2012)",
+      "headphones": false,
+      "layers": [
+        "<function make_noise_layer.<locals>.fn at 0x7176f66c7ec0>"
+      ],
+      "filename": "noise-pink.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "colored-noise",
+      "category_title": "Colored Noise",
+      "category_description": "Spectrally shaped random signals used for masking distractions and creating ambient texture.",
+      "id": "noise-brown",
+      "name": "Brown Noise",
+      "description": "Low-frequency emphasis (1/f\u00b2 spectrum). Deep, warm rumble like a waterfall.",
+      "purpose": "Deep relaxation, focus for ADHD, wind-down",
+      "research": "Low-frequency noise activates parasympathetic nervous system (Alvarsson et al., 2010)",
+      "headphones": false,
+      "layers": [
+        "<function make_noise_layer.<locals>.fn at 0x7176f66c7f60>"
+      ],
+      "filename": "noise-brown.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "ambient-drones",
+      "category_title": "Ambient Drones",
+      "category_description": "Frequency-modulated harmonic tones that create evolving ambient textures. Subliminal harmonic anchoring for immersion.",
+      "id": "drone-deep-bass",
+      "name": "Deep Bass Drone",
+      "description": "55 Hz sub-bass with slow FM modulation. Grounding, meditative vibration.",
+      "purpose": "Grounding, body awareness, meditation anchor",
+      "research": "Low-frequency tones activate vestibular system and promote relaxation (Todd & Cody, 2000)",
+      "headphones": false,
+      "layers": [
+        "<function make_drone_layer.<locals>.fn at 0x7176f66d8040>",
+        "<function make_noise_layer.<locals>.fn at 0x7176f66d80e0>"
+      ],
+      "filename": "drone-deep-bass.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "ambient-drones",
+      "category_title": "Ambient Drones",
+      "category_description": "Frequency-modulated harmonic tones that create evolving ambient textures. Subliminal harmonic anchoring for immersion.",
+      "id": "drone-warm-mid",
+      "name": "Warm Mid-Range Drone",
+      "description": "130 Hz drone with gentle harmonics. Comforting, womb-like.",
+      "purpose": "Background comfort, stress relief, ambient fill",
+      "research": "Sustained tonal environments reduce physiological stress markers (Thoma et al., 2013)",
+      "headphones": false,
+      "layers": [
+        "<function make_drone_layer.<locals>.fn at 0x7176f66d8180>",
+        "<function make_noise_layer.<locals>.fn at 0x7176f66d8220>"
+      ],
+      "filename": "drone-warm-mid.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "ambient-drones",
+      "category_title": "Ambient Drones",
+      "category_description": "Frequency-modulated harmonic tones that create evolving ambient textures. Subliminal harmonic anchoring for immersion.",
+      "id": "drone-evolving-harmonic",
+      "name": "Evolving Harmonic Drone",
+      "description": "200 Hz base with 5 harmonics and complex modulation. Slowly shifting timbre.",
+      "purpose": "Creative inspiration, ambient soundscaping",
+      "research": "Complex tonal environments stimulate default mode network activity (Taruffi et al., 2017)",
+      "headphones": false,
+      "layers": [
+        "<function make_drone_layer.<locals>.fn at 0x7176f66d82c0>",
+        "<function make_noise_layer.<locals>.fn at 0x7176f66d8360>"
+      ],
+      "filename": "drone-evolving-harmonic.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "soundscapes",
+      "category_title": "Cognitive Soundscapes",
+      "category_description": "Multi-layered compositions combining binaural beats, noise, and drones for specific cognitive states.",
+      "id": "scape-morning-energizer",
+      "name": "Morning Energizer",
+      "description": "18 Hz beta binaural + pink noise + bright drone. Wake up and activate.",
+      "purpose": "Morning alertness, energy boost, productive start",
+      "research": "Beta entrainment combined with moderate noise optimizes morning cortisol utilization",
+      "headphones": true,
+      "layers": [
+        "<function make_binaural_layer.<locals>.fn at 0x7176f66d8400>",
+        "<function make_noise_layer.<locals>.fn at 0x7176f66d84a0>",
+        "<function make_drone_layer.<locals>.fn at 0x7176f66d8540>"
+      ],
+      "filename": "scape-morning-energizer.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "soundscapes",
+      "category_title": "Cognitive Soundscapes",
+      "category_description": "Multi-layered compositions combining binaural beats, noise, and drones for specific cognitive states.",
+      "id": "scape-deep-focus",
+      "name": "Deep Focus",
+      "description": "40 Hz gamma binaural + pink noise + subtle drone. Maximum concentration.",
+      "purpose": "Deep work, coding, complex problem-solving",
+      "research": "Gamma entrainment enhances working memory and sustained attention",
+      "headphones": true,
+      "layers": [
+        "<function make_binaural_layer.<locals>.fn at 0x7176f66d85e0>",
+        "<function make_noise_layer.<locals>.fn at 0x7176f66d8680>",
+        "<function make_drone_layer.<locals>.fn at 0x7176f66d8720>"
+      ],
+      "filename": "scape-deep-focus.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "soundscapes",
+      "category_title": "Cognitive Soundscapes",
+      "category_description": "Multi-layered compositions combining binaural beats, noise, and drones for specific cognitive states.",
+      "id": "scape-creative-flow",
+      "name": "Creative Flow",
+      "description": "7 Hz theta binaural + pink noise + evolving drone. Unlock divergent thinking.",
+      "purpose": "Brainstorming, artistic work, creative problem-solving",
+      "research": "Theta-alpha border states correlate with creative insight (Lustenberger et al., 2015)",
+      "headphones": true,
+      "layers": [
+        "<function make_binaural_layer.<locals>.fn at 0x7176f66d87c0>",
+        "<function make_noise_layer.<locals>.fn at 0x7176f66d8860>",
+        "<function make_drone_layer.<locals>.fn at 0x7176f66d8900>"
+      ],
+      "filename": "scape-creative-flow.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "soundscapes",
+      "category_title": "Cognitive Soundscapes",
+      "category_description": "Multi-layered compositions combining binaural beats, noise, and drones for specific cognitive states.",
+      "id": "scape-study-session",
+      "name": "Study Session",
+      "description": "40 Hz gamma binaural + 14 Hz beta isochronic + pink noise. Dual entrainment for learning.",
+      "purpose": "Studying, memorization, exam preparation",
+      "research": "Gamma-beta coupling enhances memory encoding and retrieval",
+      "headphones": true,
+      "layers": [
+        "<function make_binaural_layer.<locals>.fn at 0x7176f66d89a0>",
+        "<function make_isochronic_layer.<locals>.fn at 0x7176f66d8a40>",
+        "<function make_noise_layer.<locals>.fn at 0x7176f66d8ae0>"
+      ],
+      "filename": "scape-study-session.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "soundscapes",
+      "category_title": "Cognitive Soundscapes",
+      "category_description": "Multi-layered compositions combining binaural beats, noise, and drones for specific cognitive states.",
+      "id": "scape-stress-relief",
+      "name": "Stress Relief",
+      "description": "10 Hz alpha binaural + brown noise + warm drone. Decompress and let go.",
+      "purpose": "Anxiety reduction, post-work decompression, emotional regulation",
+      "research": "Alpha entrainment reduces state anxiety scores (Huang & Charyton, 2008)",
+      "headphones": true,
+      "layers": [
+        "<function make_binaural_layer.<locals>.fn at 0x7176f66d8b80>",
+        "<function make_noise_layer.<locals>.fn at 0x7176f66d8c20>",
+        "<function make_drone_layer.<locals>.fn at 0x7176f66d8cc0>"
+      ],
+      "filename": "scape-stress-relief.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "soundscapes",
+      "category_title": "Cognitive Soundscapes",
+      "category_description": "Multi-layered compositions combining binaural beats, noise, and drones for specific cognitive states.",
+      "id": "scape-power-nap",
+      "name": "Power Nap",
+      "description": "5 Hz theta binaural + brown noise + deep drone. 20-minute nap optimization.",
+      "purpose": "Short restorative sleep, energy recovery",
+      "research": "Theta entrainment accelerates sleep onset latency (Abeln et al., 2014)",
+      "headphones": true,
+      "layers": [
+        "<function make_binaural_layer.<locals>.fn at 0x7176f66d8d60>",
+        "<function make_noise_layer.<locals>.fn at 0x7176f66d8e00>",
+        "<function make_drone_layer.<locals>.fn at 0x7176f66d8ea0>"
+      ],
+      "filename": "scape-power-nap.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "soundscapes",
+      "category_title": "Cognitive Soundscapes",
+      "category_description": "Multi-layered compositions combining binaural beats, noise, and drones for specific cognitive states.",
+      "id": "scape-sleep-preparation",
+      "name": "Sleep Preparation",
+      "description": "2 Hz delta binaural + heavy brown noise + ultra-slow sub-bass. Drift into deep sleep.",
+      "purpose": "Insomnia relief, sleep onset, deep rest",
+      "research": "Delta entrainment with low-frequency noise promotes slow-wave sleep",
+      "headphones": true,
+      "layers": [
+        "<function make_binaural_layer.<locals>.fn at 0x7176f66d8f40>",
+        "<function make_noise_layer.<locals>.fn at 0x7176f66d8fe0>",
+        "<function make_drone_layer.<locals>.fn at 0x7176f66d9080>"
+      ],
+      "filename": "scape-sleep-preparation.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "soundscapes",
+      "category_title": "Cognitive Soundscapes",
+      "category_description": "Multi-layered compositions combining binaural beats, noise, and drones for specific cognitive states.",
+      "id": "scape-flow-state",
+      "name": "Flow State",
+      "description": "10 Hz alpha binaural + 40 Hz gamma isochronic + brown noise + drone. Alpha-gamma coupling.",
+      "purpose": "Peak performance, athletic visualization, flow state induction",
+      "research": "Alpha-gamma cross-frequency coupling observed during flow (Katahira et al., 2018)",
+      "headphones": true,
+      "layers": [
+        "<function make_binaural_layer.<locals>.fn at 0x7176f66d9120>",
+        "<function make_isochronic_layer.<locals>.fn at 0x7176f66d91c0>",
+        "<function make_noise_layer.<locals>.fn at 0x7176f66d9260>",
+        "<function make_drone_layer.<locals>.fn at 0x7176f66d9300>"
+      ],
+      "filename": "scape-flow-state.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "educational",
+      "category_title": "Educational Demos",
+      "category_description": "Demonstrations that illustrate the building blocks of psychoacoustic audio engineering.",
+      "id": "demo-pure-binaural",
+      "name": "Pure Binaural Beat (No Noise)",
+      "description": "Raw 10 Hz binaural beat on 200 Hz carrier. Hear the beat frequency clearly in isolation.",
+      "purpose": "Understanding how binaural beats work",
+      "research": "The brain perceives a phantom beat at |f_right - f_left| Hz",
+      "headphones": true,
+      "layers": [
+        "<function make_binaural_layer.<locals>.fn at 0x7176f66d93a0>"
+      ],
+      "filename": "demo-pure-binaural.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "educational",
+      "category_title": "Educational Demos",
+      "category_description": "Demonstrations that illustrate the building blocks of psychoacoustic audio engineering.",
+      "id": "demo-pure-isochronic",
+      "name": "Pure Isochronic Tone (No Noise)",
+      "description": "Raw 10 Hz isochronic pulse on 300 Hz carrier. Hear the rhythmic amplitude modulation.",
+      "purpose": "Understanding how isochronic tones work",
+      "research": "Sharp amplitude onsets drive stronger neural entrainment than smooth beats",
+      "headphones": false,
+      "layers": [
+        "<function make_isochronic_layer.<locals>.fn at 0x7176f66d9440>"
+      ],
+      "filename": "demo-pure-isochronic.wav",
+      "size": "10.1 MB"
+    },
+    {
+      "category": "educational",
+      "category_title": "Educational Demos",
+      "category_description": "Demonstrations that illustrate the building blocks of psychoacoustic audio engineering.",
+      "id": "demo-carrier-comparison",
+      "name": "Carrier Frequency Comparison",
+      "description": "Same 10 Hz beat at three carriers: 100 Hz (deep), 250 Hz (mid), 500 Hz (bright). 40s each.",
+      "purpose": "Hear how carrier frequency affects perceived warmth/brightness",
+      "research": "Lower carriers feel warmer; higher carriers feel more alert",
+      "headphones": true,
+      "layers": "custom_carrier_comparison",
+      "filename": "demo-carrier-comparison.wav",
+      "size": "9.8 MB"
+    },
+    {
+      "category": "educational",
+      "category_title": "Educational Demos",
+      "category_description": "Demonstrations that illustrate the building blocks of psychoacoustic audio engineering.",
+      "id": "demo-noise-comparison",
+      "name": "Noise Color Comparison",
+      "description": "White, pink, then brown noise \u2014 40 seconds each. Hear the spectral differences.",
+      "purpose": "Understanding noise color characteristics",
+      "research": "White=flat, Pink=1/f (balanced), Brown=1/f\u00b2 (deep)",
+      "headphones": false,
+      "layers": "custom_noise_comparison",
+      "filename": "demo-noise-comparison.wav",
+      "size": "9.8 MB"
+    }
+  ]
+}
