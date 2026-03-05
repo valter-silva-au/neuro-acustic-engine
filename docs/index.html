@@ -689,8 +689,13 @@
             .tracks-grid { gap: 0.5rem; }
             .track-card { padding: 0.75rem; }
             .mixer-bar { padding: 0 0.75rem; }
-            .track-research { display: none; }
         }
+        /* Preference-driven visibility (class-based, not inline) */
+        body.hide-research .track-research { display: none !important; }
+        body.hide-purpose .track-purpose { display: none !important; }
+        body.compact-mode .track-card { padding: 0.6rem !important; }
+        body.compact-mode .track-desc { display: none !important; }
+        body.compact-mode .track-waveform { height: 20px; }
         /* Animations */
         @keyframes pulse-green {
             0%, 100% { box-shadow: 0 0 0 0 var(--green-glow); }
@@ -1295,8 +1300,14 @@ function syncSettingsUI() {
     if (volSlider) volSlider.value = prefs.defaultVolume;
     if (volLabel) volLabel.textContent = prefs.defaultVolume + '%';
     // Toggles
-    ['autoLoop', 'showResearch', 'showPurpose', 'compact'].forEach(key => {
-        const el = document.getElementById('pref-' + key.replace(/([A-Z])/g, '-$1').toLowerCase());
+    const toggleMap = {
+        autoLoop: 'pref-auto-loop',
+        showResearch: 'pref-show-research',
+        showPurpose: 'pref-show-purpose',
+        compact: 'pref-compact',
+    };
+    Object.entries(toggleMap).forEach(([key, id]) => {
+        const el = document.getElementById(id);
         if (el) el.classList.toggle('on', prefs[key]);
     });
     // Selects
@@ -1314,21 +1325,10 @@ function applyPrefs(prefs) {
     } else {
         applyTheme(prefs.theme);
     }
-    // Show/hide research citations
-    document.querySelectorAll('.track-research').forEach(el => {
-        el.style.display = prefs.showResearch ? '' : 'none';
-    });
-    // Show/hide purpose
-    document.querySelectorAll('.track-purpose').forEach(el => {
-        el.style.display = prefs.showPurpose ? '' : 'none';
-    });
-    // Compact mode
-    document.querySelectorAll('.track-card').forEach(el => {
-        el.style.padding = prefs.compact ? '0.6rem' : '';
-    });
-    document.querySelectorAll('.track-desc').forEach(el => {
-        el.style.display = prefs.compact ? 'none' : '';
-    });
+    // Class-based visibility toggles (survives re-renders, beats CSS specificity)
+    document.body.classList.toggle('hide-research', !prefs.showResearch);
+    document.body.classList.toggle('hide-purpose', !prefs.showPurpose);
+    document.body.classList.toggle('compact-mode', prefs.compact);
 }
 
 // Override showCategory to close sidebar on mobile
