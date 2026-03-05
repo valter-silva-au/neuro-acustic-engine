@@ -1045,17 +1045,56 @@ function startWaveform(id) {
         const analyser = activeTracks[id].analyser;
         const data = new Uint8Array(analyser.frequencyBinCount);
         analyser.getByteFrequencyData(data);
-
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const barW = (canvas.width / data.length) * 0.8;
-        const gap = (canvas.width / data.length) * 0.2;
 
-        for (let i = 0; i < data.length; i++) {
-            const h = (data[i] / 255) * canvas.height * 0.9;
-            const x = i * (barW + gap);
-            const y = (canvas.height - h) / 2;
-            ctx.fillStyle = `rgba(${cr}, ${cg}, ${cb}, ${0.3 + (data[i]/255) * 0.7})`;
-            ctx.fillRect(x, y, barW, h);
+        const style = loadPrefs().waveformStyle || 'bars';
+        const w = canvas.width, h = canvas.height;
+        const len = data.length;
+
+        if (style === 'line') {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgb(${cr}, ${cg}, ${cb})`;
+            ctx.lineWidth = 2;
+            for (let i = 0; i < len; i++) {
+                const x = (i / len) * w;
+                const y = h / 2 - (data[i] / 255) * h * 0.4;
+                i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            // Mirror line below center
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(${cr}, ${cg}, ${cb}, 0.3)`;
+            ctx.lineWidth = 1.5;
+            for (let i = 0; i < len; i++) {
+                const x = (i / len) * w;
+                const y = h / 2 + (data[i] / 255) * h * 0.25;
+                i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        } else if (style === 'mirror') {
+            const barW = (w / len) * 0.8;
+            const gap = (w / len) * 0.2;
+            for (let i = 0; i < len; i++) {
+                const barH = (data[i] / 255) * h * 0.45;
+                const x = i * (barW + gap);
+                // Top half
+                ctx.fillStyle = `rgba(${cr}, ${cg}, ${cb}, ${0.3 + (data[i]/255) * 0.7})`;
+                ctx.fillRect(x, h / 2 - barH, barW, barH);
+                // Bottom half (mirror, dimmer)
+                ctx.fillStyle = `rgba(${cr}, ${cg}, ${cb}, ${0.15 + (data[i]/255) * 0.35})`;
+                ctx.fillRect(x, h / 2, barW, barH);
+            }
+        } else {
+            // Default: bars
+            const barW = (w / len) * 0.8;
+            const gap = (w / len) * 0.2;
+            for (let i = 0; i < len; i++) {
+                const barH = (data[i] / 255) * h * 0.9;
+                const x = i * (barW + gap);
+                const y = (h - barH) / 2;
+                ctx.fillStyle = `rgba(${cr}, ${cg}, ${cb}, ${0.3 + (data[i]/255) * 0.7})`;
+                ctx.fillRect(x, y, barW, barH);
+            }
         }
     }
     draw();
